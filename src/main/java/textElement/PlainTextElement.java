@@ -1,6 +1,9 @@
 package textElement;
 
-public class PlainTextElement extends TextElement{
+import javafx.scene.paint.Color;
+import javafx.scene.paint.Paint;
+
+public class PlainTextElement extends TextElement {
 
 	private String text;
 
@@ -8,6 +11,10 @@ public class PlainTextElement extends TextElement{
 	public String toCommand() {
 		return String.format("{\"text\":\"%s\"}", text);
 	}
-	
-	
+
+	@Override
+	public String toString() {
+		return text;
+	}
+
 }
