@@ -1,7 +1,11 @@
 package gui;
 
+import java.util.Iterator;
+
 import javax.lang.model.element.Element;
 
+import converter.Page;
+import javafx.scene.CacheHint;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.StrokeType;
@@ -16,11 +20,18 @@ public class PagePreview extends StackPane {
 	private TextFlow textFlow = new TextFlow();
 
 	// font settings
-	String fontFamily = "Helvetica";
-	double fontSize = 20;
+	private String fontFamily = "Helvetica";
+	private double fontSize = 20;
+	
+	private Page page;
 
-	public PagePreview() {
-
+	public PagePreview(Page page) {
+		
+		setCache(true);
+		setCacheShape(true);
+		setCacheHint(CacheHint.SPEED);
+		
+		this.page = page;
 		// TODO: figure out a good font using System.out.println(Font.getFamilies());
 
 		textFlow.setLayoutX(40);
@@ -41,6 +52,14 @@ public class PagePreview extends StackPane {
 		textFlow.getChildren().addAll(text1, text2, text3);
 
 		this.getChildren().add(textFlow);
+	}
+	
+	public void updatePreview() {
+		textFlow.getChildren().clear();
+		
+		for (TextElement t : page.getTextElements()) {
+			addText(t);
+		}
 	}
 
 	/**

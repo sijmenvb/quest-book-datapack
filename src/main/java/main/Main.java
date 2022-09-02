@@ -1,11 +1,14 @@
 package main;
 
+import converter.Book;
+import converter.Page;
 import gui.PageEditor;
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
+import textElement.PlainTextElement;
 
 public class Main extends Application {
 
@@ -20,7 +23,16 @@ public class Main extends Application {
 	@Override
 	public void start(final Stage primaryStage) {
 		primaryStage.setTitle("Hello World!");
-		PageEditor root = new PageEditor();
+		
+		//empty book:
+		Page page = new Page();
+		page.addTextElement(new PlainTextElement());
+		Book book = new Book();
+		book.addPage(page);
+		
+		
+		
+		PageEditor root = new PageEditor(book);
 		primaryStage.setScene(new Scene(root, 1280, 720));
 		primaryStage.show();
 

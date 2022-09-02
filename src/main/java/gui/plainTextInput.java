@@ -1,20 +1,40 @@
 package gui;
 
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.ColorPicker;
 import javafx.scene.control.TextArea;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import textElement.TextElement;
 
 public class plainTextInput extends VBox {
-	public plainTextInput() {
-
+	
+	private TextArea input;
+	private TextElement currentElement;
+	private PagePreview previewRef;
+	
+	public plainTextInput(TextElement element,PagePreview previewRef) {
+		currentElement = element;		
+		this.previewRef = previewRef;
 		ChoiceBox<String> typeSelector = new ChoiceBox<>();
 		typeSelector.getItems().add("text");
 		typeSelector.setValue("text");
 
-		TextArea input = new TextArea();
+		input = new TextArea();
+		
+		//add listener that check for updates to the input text field.
+		input.textProperty().addListener(new ChangeListener<String>() {
+		    @Override
+		    public void changed(ObservableValue<? extends String> observable,
+		            String oldValue, String newValue) {
+
+		    	inputUpdated(newValue);
+		    }
+		});
+		
 
 		CheckBox bold = new CheckBox("Bold");
 		CheckBox italics = new CheckBox("Italic");
@@ -23,4 +43,11 @@ public class plainTextInput extends VBox {
 
 		this.getChildren().addAll(typeSelector, input, bold, italics, colour);
 	}
+	
+	private void inputUpdated(String text) {
+		currentElement.setText(text);
+		previewRef.updatePreview();
+		
+	}
+	
 }

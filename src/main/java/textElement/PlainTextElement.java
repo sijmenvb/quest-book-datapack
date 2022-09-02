@@ -17,4 +17,9 @@ public class PlainTextElement extends TextElement {
 		return text;
 	}
 
+	@Override
+	public void setText(String newText) {
+		text = newText;
+	}
+
 }
