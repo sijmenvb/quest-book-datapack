@@ -1,9 +1,9 @@
 package gui;
 
 public enum TextElementType {
-	Text("Text"), Score("Score");
+	TEXT("Text"), SCORE("Score");
 
-	// the code below make sit possible to change the name of the enum without
+	// the code below make sit possible to change the name of the ENUM without
 	// having to change the code.
 	private final String label;
 

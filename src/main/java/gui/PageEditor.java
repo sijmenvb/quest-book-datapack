@@ -9,7 +9,7 @@ import textElement.PlainTextElement;
 
 public class PageEditor extends HBox {
 	// private InlineCssTextArea area;
-	private TextElementType type = TextElementType.Text;
+	private TextElementType type = TextElementType.TEXT;
 	private Book book;
 	
 	public PageEditor(Book book) {		

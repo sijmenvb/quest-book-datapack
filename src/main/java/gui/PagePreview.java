@@ -26,7 +26,7 @@ public class PagePreview extends StackPane {
 	private Page page;
 
 	public PagePreview(Page page) {
-		
+		//enable cashing for preview.
 		setCache(true);
 		setCacheShape(true);
 		setCacheHint(CacheHint.SPEED);
