@@ -23,7 +23,5 @@ public abstract class TextElement {
 	public Paint getColour() {
 		return textColour;
 	}
-	
-	public abstract void setText(String newText);
 
 }

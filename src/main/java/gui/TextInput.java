@@ -1,5 +1,6 @@
 package gui;
 
+import converter.Page;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
@@ -14,6 +15,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
+import textElement.PlainTextElement;
 import textElement.TextElement;
 
 public class TextInput extends VBox {
@@ -21,16 +23,18 @@ public class TextInput extends VBox {
 	private TextArea input;
 	private TextElement currentElement;
 	private PagePreview previewRef;
-	private Label pageSeletorLabel;
+	private GUIPageMannager pageMannagerRef;
 
-	public TextInput(TextElement element, PagePreview previewRef) {
 
+
+	public TextInput(TextElement element, PagePreview previewRef, GUIPageMannager pageMannagerRef) {
+		this.previewRef = previewRef;
+		this.pageMannagerRef = pageMannagerRef;
+		pageMannagerRef.setInputRef(this);
 		this.setSpacing(SPACING);// set vertical spacing.
 
-		HBox pageselector = pageselector();
-
 		currentElement = element;
-		this.previewRef = previewRef;
+		
 		ChoiceBox<String> typeSelector = new ChoiceBox<>();
 		typeSelector.getItems().add("text");
 		typeSelector.setValue("text");
@@ -51,78 +55,44 @@ public class TextInput extends VBox {
 
 		ColorPicker colour = new ColorPicker(Color.BLACK);
 
-		this.getChildren().addAll(pageselector, typeSelector, input, bold, italics, colour);
-	}
+		this.getChildren().addAll(typeSelector, input, bold, italics, colour);
+	}	
 
-	private HBox pageselector() {
-		Button previousButton = new Button("previous");
-		pageSeletorLabel = new Label(" page 1 of 1 ");
-		pageSeletorLabel.setFont(Font.font(16));
-		Button nextButton = new Button("next");
-		Button addPageButton = new Button("+");
-		Button swapLeftButton = new Button("swap left");
-		Button swapRightButton = new Button("swap Right");
-		
-		//button functionality
-		previousButton.setOnAction(new EventHandler<ActionEvent>() {
-			public void handle(ActionEvent arg0) {
-				previousPage();
-			}
-		});
-		
-		nextButton.setOnAction(new EventHandler<ActionEvent>() {
-			public void handle(ActionEvent arg0) {
-				nextPage();
-			}
-		});
-		
-		addPageButton.setOnAction(new EventHandler<ActionEvent>() {
-			public void handle(ActionEvent arg0) {
-				addPage();
-			}
-		});
-		
-		swapLeftButton.setOnAction(new EventHandler<ActionEvent>() {
-			public void handle(ActionEvent arg0) {
-				swapLeft();
-			}
-		});
-		
-		swapRightButton.setOnAction(new EventHandler<ActionEvent>() {
-			public void handle(ActionEvent arg0) {
-				swapRight();
-			}
-		});
-		
-		return new HBox(SPACING, swapLeftButton, previousButton, pageSeletorLabel, nextButton, addPageButton,
-				swapRightButton);
-
-	}
-
-	private void previousPage() {
-
-	}
-
-	private void nextPage() {
-
-	}
-
-	private void swapLeft() {
-
-	}
-
-	private void swapRight() {
-
-	}
-
-	private void addPage() {
-
-	}
-
+	
+	
+	/** gets called when the text is updated.
+	 * 
+	 * @param text
+	 */
 	private void inputUpdated(String text) {
-		currentElement.setText(text);
-		previewRef.updatePreview();
-
+		if (currentElement instanceof  PlainTextElement) {
+			((PlainTextElement)currentElement).setText(text);
+		}
+		
+		update();
 	}
-
+	
+	public void newPage(Page page) {
+		setTextElement(page.getTextElements().getFirst());
+		loadText();
+	}
+	
+	public void setTextElement(TextElement currentElement) {
+		this.currentElement = currentElement;
+		update();
+	}
+	
+	/**loads the text from current text element into input.
+	 * 
+	 */
+	public void loadText() {
+		if (currentElement instanceof  PlainTextElement) {
+			input.setText(((PlainTextElement)currentElement).getText());
+		}
+		
+	}
+	
+	private void update() {
+		previewRef.updatePreview();
+	}
 }

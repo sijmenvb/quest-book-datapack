@@ -2,7 +2,7 @@ package main;
 
 import converter.Book;
 import converter.Page;
-import gui.PageEditor;
+import gui.GUIMain;
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
 import javafx.scene.Scene;
@@ -32,7 +32,7 @@ public class Main extends Application {
 		
 		
 		
-		PageEditor root = new PageEditor(book);
+		GUIMain root = new GUIMain(book);
 		primaryStage.setScene(new Scene(root, 1280, 720));
 		primaryStage.show();
 

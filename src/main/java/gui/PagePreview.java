@@ -94,4 +94,9 @@ public class PagePreview extends StackPane {
 		textFlow.getChildren().add(text);
 
 	}
+
+	public void setPage(Page page) {
+		this.page = page;
+	}
+	
 }
