@@ -1,8 +1,11 @@
 package gui;
 
 import java.util.Collections;
+import java.util.Iterator;
+import java.util.LinkedList;
 
 import converter.Book;
+import converter.Page;
 import textElement.PlainTextElement;
 
 /**
@@ -15,15 +18,22 @@ public class GUIPageMannager {
 	private Book book;
 	private int bookIndex = 0;
 	private PagePreview previewRef;
-	private TextInput inputRef; //a new textInput will set this value to itself upon creation.
-	private PageSelector pageSelectorRef;//a new PageSelector will set this value to itself upon creation.
-	
-	public GUIPageMannager(Book book,PagePreview preview) {
+	private TextInput inputRef; // a new textInput will set this value to itself upon creation.
+	private PageSelector pageSelectorRef;// a new PageSelector will set this value to itself upon creation.
+	private TextElementSelector textElementSelector;// a new PageSelector will set this value to itself upon creation.
+	private LinkedList<GUITextElementMannager> elementManagers;
+
+	public GUIPageMannager(Book book, PagePreview preview) {
 		super();
 		this.book = book;
 		this.previewRef = preview;
+
+		// make a element manager for every page in the book.
+		elementManagers = new LinkedList<GUITextElementMannager>();
+		for (int i = 0; i < book.getPages().size(); i++) {
+			elementManagers.add(new GUITextElementMannager(book, this, inputRef, textElementSelector, previewRef));
+		}
 	}
-	
 
 	public void previousPage() {
 		if (existPageLeft()) {// if there is a page to the left
@@ -60,6 +70,8 @@ public class GUIPageMannager {
 		book.addNewPage(bookIndex + 1);
 		bookIndex++;
 		book.getPages().get(bookIndex).addTextElement(new PlainTextElement());
+		elementManagers.add(bookIndex,
+				new GUITextElementMannager(book, this, inputRef, textElementSelector, previewRef));
 		showpage();
 	}
 
@@ -86,19 +98,31 @@ public class GUIPageMannager {
 	public void showpage() {
 		previewRef.setPage(book.getPages().get(bookIndex));
 		inputRef.newPage(book.getPages().get(bookIndex));
-		pageSelectorRef.updatelabel(bookIndex+1, book.getPages().size());
+		textElementSelector.setElementMannager(getCurrentElementMannager());
+		pageSelectorRef.updatelabel(bookIndex + 1, book.getPages().size());
+		elementManagers.get(bookIndex).showpage();
 	}
 
+	public GUITextElementMannager getCurrentElementMannager() {
+		return elementManagers.get(bookIndex);
+	}
 
+	public int getBookIndex() {
+		return bookIndex;
+	}
 
 	public void setInputRef(TextInput input) {
 		this.inputRef = input;
+		for (GUITextElementMannager guiTextElementMannager : elementManagers) {
+			guiTextElementMannager.setInputRef(input);
+		}
 	}
-
 
 	public void setPageSelectorRef(PageSelector pageSelectorRef) {
 		this.pageSelectorRef = pageSelectorRef;
 	}
-	
-	
+
+	public void setTextElementSelector(TextElementSelector textElementSelector) {
+		this.textElementSelector = textElementSelector;
+	}
 }

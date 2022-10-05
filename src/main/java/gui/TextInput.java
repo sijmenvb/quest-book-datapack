@@ -25,8 +25,6 @@ public class TextInput extends VBox {
 	private PagePreview previewRef;
 	private GUIPageMannager pageMannagerRef;
 
-
-
 	public TextInput(TextElement element, PagePreview previewRef, GUIPageMannager pageMannagerRef) {
 		this.previewRef = previewRef;
 		this.pageMannagerRef = pageMannagerRef;
@@ -34,7 +32,7 @@ public class TextInput extends VBox {
 		this.setSpacing(SPACING);// set vertical spacing.
 
 		currentElement = element;
-		
+
 		ChoiceBox<String> typeSelector = new ChoiceBox<>();
 		typeSelector.getItems().add("text");
 		typeSelector.setValue("text");
@@ -56,42 +54,39 @@ public class TextInput extends VBox {
 		ColorPicker colour = new ColorPicker(Color.BLACK);
 
 		this.getChildren().addAll(typeSelector, input, bold, italics, colour);
-	}	
+	}
 
-	
-	
-	/** gets called when the text is updated.
+	/**
+	 * gets called when the text is updated.
 	 * 
 	 * @param text
 	 */
 	private void inputUpdated(String text) {
-		if (currentElement instanceof  PlainTextElement) {
-			((PlainTextElement)currentElement).setText(text);
+		if (currentElement instanceof PlainTextElement) {
+			((PlainTextElement) currentElement).setText(text);
 		}
-		
+
 		update();
 	}
-	
+
 	public void newPage(Page page) {
 		setTextElement(page.getTextElements().getFirst());
 		loadText();
 	}
-	
+
 	public void setTextElement(TextElement currentElement) {
 		this.currentElement = currentElement;
+		loadText();
 		update();
 	}
-	
-	/**loads the text from current text element into input.
-	 * 
+
+	/**
+	 * loads the text from current text element into input.
 	 */
 	public void loadText() {
-		if (currentElement instanceof  PlainTextElement) {
-			input.setText(((PlainTextElement)currentElement).getText());
-		}
-		
+		input.setText(currentElement.getText());
 	}
-	
+
 	private void update() {
 		previewRef.updatePreview();
 	}

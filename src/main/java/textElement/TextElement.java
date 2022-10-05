@@ -12,6 +12,8 @@ public abstract class TextElement {
 
 	public abstract String toString();
 
+	public abstract String getText();
+
 	public boolean isBold() {
 		return bold;
 	}

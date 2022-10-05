@@ -19,12 +19,9 @@ import textElement.PlainTextElement;
  */
 public class GUIMain extends HBox {
 	private final int SPACING = 5;
-	private TextElementType type = TextElementType.TEXT;
 	private Book book;
 	private TextInput input;
-	private int bookIndex;
 	private GUIPageMannager guiPageMannager;
-	private Label pageSeletorLabel;
 	
 	public GUIMain(Book book) {
 		this.book = book;
@@ -32,13 +29,19 @@ public class GUIMain extends HBox {
 		
 		PagePreview preview = new PagePreview(book.getPages().getFirst());
 		
+		
 		guiPageMannager = new GUIPageMannager(book,preview);
+		
+		//page preview
 		PageSelector pageSelector = new PageSelector(guiPageMannager);
-		input = new TextInput(book.getPages().getFirst().getTextElements().getFirst(), preview, guiPageMannager);
-
 		VBox pageView = new VBox(SPACING, pageSelector, preview);//have the page selector above the page.
 		
-		this.getChildren().addAll(pageView, input);
+		//text input
+		TextElementSelector elementSelector = new TextElementSelector(guiPageMannager);
+		input = new TextInput(book.getPages().getFirst().getTextElements().getFirst(), preview, guiPageMannager);
+		
+		VBox InputArea = new VBox(SPACING, elementSelector, input);//have the page selector above the page.
+		this.getChildren().addAll(pageView, InputArea);
 		
 		
 	}
