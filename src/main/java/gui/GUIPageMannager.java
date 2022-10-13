@@ -97,7 +97,7 @@ public class GUIPageMannager {
 	 */
 	public void showpage() {
 		previewRef.setPage(book.getPages().get(bookIndex));
-		inputRef.newPage(book.getPages().get(bookIndex));
+		inputRef.showPage(book.getPages().get(bookIndex));
 		textElementSelector.setElementMannager(getCurrentElementMannager());
 		pageSelectorRef.updatelabel(bookIndex + 1, book.getPages().size());
 		elementManagers.get(bookIndex).showpage();

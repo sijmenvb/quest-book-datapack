@@ -69,7 +69,7 @@ public class TextInput extends VBox {
 		update();
 	}
 
-	public void newPage(Page page) {
+	public void showPage(Page page) {
 		setTextElement(page.getTextElements().getFirst());
 		loadText();
 	}
