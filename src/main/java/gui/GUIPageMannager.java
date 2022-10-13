@@ -72,7 +72,6 @@ public class GUIPageMannager {
 
 	/**
 	 * return true if there is a page on the left.
-	 * 
 	 */
 	private boolean existPageLeft() {
 		return pageIndex > 0;
@@ -80,7 +79,6 @@ public class GUIPageMannager {
 
 	/**
 	 * return true if there exists a page to the right.
-	 * 
 	 */
 	private boolean existPageRight() {
 		return pageIndex < book.getPages().size() - 1;
@@ -88,7 +86,6 @@ public class GUIPageMannager {
 
 	/**
 	 * shows the page at bookIndex
-	 * 
 	 */
 	public void showpage() {
 		guiUpdater.setCurrentPage(pageIndex);
