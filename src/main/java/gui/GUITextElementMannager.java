@@ -15,26 +15,15 @@ public class GUITextElementMannager {
 
 	private Book book;
 	private int textElementIndex = 0;
-	private GUIPageMannager guiPageMannagerRef;
-	private TextElementSelector textElementSelectorRef;// a new TextElementSelectorRef will set this value to itself
-														// upon creation.
 	private TextElementType type = TextElementType.TEXT;
-	private TextInput inputRef;
-	private PagePreview previewRef;
+	private GUIUpdater guiUpdater;
 
-	public GUITextElementMannager(Book book,GUIPageMannager guiPageMannager,TextInput input,TextElementSelector textElementSelectorRef, PagePreview preview) {
+	public GUITextElementMannager(Book book,GUIUpdater guiUpdater) {
 		super();
 		this.book = book;
-		this.guiPageMannagerRef = guiPageMannager;
-		this.textElementSelectorRef = textElementSelectorRef;
-		this.previewRef = preview;
-		this.inputRef = input;
+		this.guiUpdater = guiUpdater;
 	}
 	
-	public void setInputRef(TextInput input) {
-		this.inputRef = input;
-	}
-
 	public void previousTextElement() {
 		if (existPageLeft()) {// if there is a page to the left
 			textElementIndex--;
@@ -93,19 +82,11 @@ public class GUITextElementMannager {
 	 * 
 	 */
 	public void showpage() {
-		inputRef.setTextElement(
-				getCurrentPage().getTextElements().get(textElementIndex));
-		textElementSelectorRef.updatelabel(textElementIndex + 1, getCurrentPage().getTextElements().size());
-		previewRef.updatePreview();
-		
+		guiUpdater.setCurrentElement(textElementIndex);
+		guiUpdater.updateGUI();
 	}
 	
 	public Page getCurrentPage() {
-		return book.getPages().get(guiPageMannagerRef.getBookIndex());
+		return book.getPages().get(guiUpdater.getCurrentPage());
 	}
-
-	public void setTextElementSelectorRef(TextElementSelector textElementSelectorRef) {
-		this.textElementSelectorRef = textElementSelectorRef;
-	}
-
 }

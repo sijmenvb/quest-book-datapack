@@ -1,5 +1,6 @@
 package gui;
 
+import converter.Book;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.control.Button;
@@ -7,18 +8,21 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
 import javafx.scene.text.Font;
 
-public class TextElementSelector extends HBox {
+public class TextElementSelector extends HBox implements UpdatableGUI {
 	private static int SPACING = 5;// how much space is between the different elements.
 	private Label pageSeletorLabel;
 	private GUITextElementMannager elementMannagerRef;
 
-	public TextElementSelector(GUIPageMannager guiPageMannager) {
+	private GUIUpdater guiUpdater;
+	private GUIPageMannager guiPageMannager;
+
+	public TextElementSelector(GUIPageMannager guiPageMannager, GUIUpdater guiUpdater) {
 		this.elementMannagerRef = guiPageMannager.getCurrentElementMannager();
-		guiPageMannager.setTextElementSelector(this);
-		elementMannagerRef.setTextElementSelectorRef(this);
-
 		this.setSpacing(SPACING);
-
+		this.guiPageMannager = guiPageMannager;
+		this.guiUpdater = guiUpdater;
+		guiUpdater.registerUpdatable(this);
+		
 		Button previousButton = new Button("previous");
 		pageSeletorLabel = new Label(" Element 1 of 1 ");
 		pageSeletorLabel.setFont(Font.font(16));
@@ -62,11 +66,9 @@ public class TextElementSelector extends HBox {
 				swapRightButton);
 	}
 
-	public void updatelabel(int elementIndex, int noElements) {
-		pageSeletorLabel.setText(String.format("Element %d of %d", elementIndex, noElements));
-	}
-
-	public void setElementMannager(GUITextElementMannager elementMannagerRef) {
-		this.elementMannagerRef = elementMannagerRef;
+	@Override
+	public void update(int currentPage, int noPages, int currentElemnt,int noElements) {
+		this.elementMannagerRef = guiPageMannager.getCurrentElementMannager();
+		pageSeletorLabel.setText(String.format("Element %d of %d", currentElemnt + 1,noElements));
 	}
 }

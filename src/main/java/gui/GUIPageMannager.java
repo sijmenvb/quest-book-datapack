@@ -3,7 +3,6 @@ package gui;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedList;
-
 import converter.Book;
 import converter.Page;
 import textElement.PlainTextElement;
@@ -16,28 +15,25 @@ import textElement.PlainTextElement;
 public class GUIPageMannager {
 
 	private Book book;
-	private int bookIndex = 0;
-	private PagePreview previewRef;
-	private TextInput inputRef; // a new textInput will set this value to itself upon creation.
-	private PageSelector pageSelectorRef;// a new PageSelector will set this value to itself upon creation.
-	private TextElementSelector textElementSelector;// a new PageSelector will set this value to itself upon creation.
+	private int pageIndex = 0;
 	private LinkedList<GUITextElementMannager> elementManagers;
+	private GUIUpdater guiUpdater;
 
-	public GUIPageMannager(Book book, PagePreview preview) {
+	public GUIPageMannager(Book book, GUIUpdater guiUpdater) {
 		super();
 		this.book = book;
-		this.previewRef = preview;
+		this.guiUpdater = guiUpdater;
 
 		// make a element manager for every page in the book.
 		elementManagers = new LinkedList<GUITextElementMannager>();
 		for (int i = 0; i < book.getPages().size(); i++) {
-			elementManagers.add(new GUITextElementMannager(book, this, inputRef, textElementSelector, previewRef));
+			elementManagers.add(new GUITextElementMannager(book, guiUpdater));
 		}
 	}
 
 	public void previousPage() {
 		if (existPageLeft()) {// if there is a page to the left
-			bookIndex--;
+			pageIndex--;
 			showpage();
 		}
 	}
@@ -45,33 +41,32 @@ public class GUIPageMannager {
 	public void nextPage() {
 
 		if (existPageRight()) {// if there is a page to the right
-			bookIndex++;
+			pageIndex++;
 			showpage();
 		}
 	}
 
 	public void swapLeft() {
 		if (existPageLeft()) {// if there is a page to the left
-			Collections.swap(book.getPages(), bookIndex, bookIndex - 1);
-			bookIndex--;
+			Collections.swap(book.getPages(), pageIndex, pageIndex - 1);
+			pageIndex--;
 			showpage();
 		}
 	}
 
 	public void swapRight() {
 		if (existPageRight()) {// if there is a page to the left
-			Collections.swap(book.getPages(), bookIndex, bookIndex + 1);
-			bookIndex++;
+			Collections.swap(book.getPages(), pageIndex, pageIndex + 1);
+			pageIndex++;
 			showpage();
 		}
 	}
 
 	public void addPage() {
-		book.addNewPage(bookIndex + 1);
-		bookIndex++;
-		book.getPages().get(bookIndex).addTextElement(new PlainTextElement());
-		elementManagers.add(bookIndex,
-				new GUITextElementMannager(book, this, inputRef, textElementSelector, previewRef));
+		book.addNewPage(pageIndex + 1);
+		pageIndex++;
+		book.getPages().get(pageIndex).addTextElement(new PlainTextElement());
+		elementManagers.add(pageIndex, new GUITextElementMannager(book, guiUpdater));
 		showpage();
 	}
 
@@ -80,7 +75,7 @@ public class GUIPageMannager {
 	 * 
 	 */
 	private boolean existPageLeft() {
-		return bookIndex > 0;
+		return pageIndex > 0;
 	}
 
 	/**
@@ -88,7 +83,7 @@ public class GUIPageMannager {
 	 * 
 	 */
 	private boolean existPageRight() {
-		return bookIndex < book.getPages().size() - 1;
+		return pageIndex < book.getPages().size() - 1;
 	}
 
 	/**
@@ -96,33 +91,15 @@ public class GUIPageMannager {
 	 * 
 	 */
 	public void showpage() {
-		previewRef.setPage(book.getPages().get(bookIndex));
-		inputRef.showPage(book.getPages().get(bookIndex));
-		textElementSelector.setElementMannager(getCurrentElementMannager());
-		pageSelectorRef.updatelabel(bookIndex + 1, book.getPages().size());
-		elementManagers.get(bookIndex).showpage();
+		guiUpdater.setCurrentPage(pageIndex);
+		elementManagers.get(pageIndex).showpage();//will set the element index and calls guiUpdater.updateGUI()
 	}
 
 	public GUITextElementMannager getCurrentElementMannager() {
-		return elementManagers.get(bookIndex);
+		return elementManagers.get(pageIndex);
 	}
 
 	public int getBookIndex() {
-		return bookIndex;
-	}
-
-	public void setInputRef(TextInput input) {
-		this.inputRef = input;
-		for (GUITextElementMannager guiTextElementMannager : elementManagers) {
-			guiTextElementMannager.setInputRef(input);
-		}
-	}
-
-	public void setPageSelectorRef(PageSelector pageSelectorRef) {
-		this.pageSelectorRef = pageSelectorRef;
-	}
-
-	public void setTextElementSelector(TextElementSelector textElementSelector) {
-		this.textElementSelector = textElementSelector;
+		return pageIndex;
 	}
 }

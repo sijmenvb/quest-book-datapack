@@ -4,6 +4,7 @@ import java.util.Iterator;
 
 import javax.lang.model.element.Element;
 
+import converter.Book;
 import converter.Page;
 import javafx.scene.CacheHint;
 import javafx.scene.layout.StackPane;
@@ -16,24 +17,27 @@ import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
 import textElement.TextElement;
 
-public class PagePreview extends StackPane {
+public class PagePreview extends StackPane implements UpdatableGUI {
 	private TextFlow textFlow = new TextFlow();
 
 	// font settings
 	private String fontFamily = "Helvetica";
 	private double fontSize = 20;
 	
-	private Page page;
+	private Book book;
+	private GUIUpdater guiUpdater;
 
-	public PagePreview(Page page) {
+	public PagePreview(Book book,GUIUpdater guiUpdater) {
 		//enable cashing for preview.
 		setCache(true);
 		setCacheShape(true);
 		setCacheHint(CacheHint.SPEED);
-		
-		this.page = page;
+		this.guiUpdater = guiUpdater;
+		this.book = book;
 		// TODO: figure out a good font using System.out.println(Font.getFamilies());
 
+		guiUpdater.registerUpdatable(this);
+		
 		textFlow.setLayoutX(40);
 		textFlow.setLayoutY(40);
 
@@ -53,15 +57,19 @@ public class PagePreview extends StackPane {
 
 		this.getChildren().add(textFlow);
 	}
+
 	
-	public void updatePreview() {
+	@Override
+	public void update(int currentPage, int noPages,int currentElemnt,int noElements) {
+		// TODO Auto-generated method stub
+		Page page = book.getPages().get(currentPage);
 		textFlow.getChildren().clear();
 		
 		for (TextElement t : page.getTextElements()) {
 			addText(t);
 		}
 	}
-
+	
 	/**
 	 * add a TextElement to the page preview.
 	 */
@@ -95,8 +103,6 @@ public class PagePreview extends StackPane {
 
 	}
 
-	public void setPage(Page page) {
-		this.page = page;
-	}
+
 	
 }

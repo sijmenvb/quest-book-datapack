@@ -1,37 +1,31 @@
 package gui;
 
-import converter.Page;
+import converter.Book;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
-import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.ColorPicker;
-import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
 import textElement.PlainTextElement;
 import textElement.TextElement;
 
-public class TextInput extends VBox {
+public class TextInput extends VBox implements UpdatableGUI {
 	private final int SPACING = 5;// how much space is between the different elements.
 	private TextArea input;
 	private TextElement currentElement;
-	private PagePreview previewRef;
-	private GUIPageMannager pageMannagerRef;
 
-	public TextInput(TextElement element, PagePreview previewRef, GUIPageMannager pageMannagerRef) {
-		this.previewRef = previewRef;
-		this.pageMannagerRef = pageMannagerRef;
-		pageMannagerRef.setInputRef(this);
+	private GUIUpdater guiUpdater;
+	private Book book;
+
+	public TextInput( Book book, GUIUpdater guiUpdater) {
 		this.setSpacing(SPACING);// set vertical spacing.
-
-		currentElement = element;
+		this.guiUpdater = guiUpdater;
+		this.book = book;
+		guiUpdater.registerUpdatable(this);
+		currentElement = book.getPages().getFirst().getTextElements().getFirst();
 
 		ChoiceBox<String> typeSelector = new ChoiceBox<>();
 		typeSelector.getItems().add("text");
@@ -66,28 +60,14 @@ public class TextInput extends VBox {
 			((PlainTextElement) currentElement).setText(text);
 		}
 
-		update();
+		guiUpdater.updateGUI();
 	}
 
-	public void showPage(Page page) {
-		setTextElement(page.getTextElements().getFirst());
-		loadText();
-	}
-
-	public void setTextElement(TextElement currentElement) {
-		this.currentElement = currentElement;
-		loadText();
-		update();
-	}
-
-	/**
-	 * loads the text from current text element into input.
-	 */
-	public void loadText() {
+	@Override
+	public void update(int currentPage, int noPages,int currentElemnt,int noElements) {
+		// TODO Auto-generated method stub
+		this.currentElement = book.getPages().get(currentPage).getTextElements().get(currentElemnt);
 		input.setText(currentElement.getText());
 	}
 
-	private void update() {
-		previewRef.updatePreview();
-	}
 }
