@@ -1,6 +1,7 @@
 package gui;
 
 import java.util.Iterator;
+import java.util.LinkedList;
 
 import javax.lang.model.element.Element;
 
@@ -40,6 +41,7 @@ public class PagePreview extends StackPane implements UpdatableGUI {
 		
 		textFlow.setLayoutX(40);
 		textFlow.setLayoutY(40);
+		textFlow.setPrefWidth(400);
 
 		// some hard coded sample data.
 		Text text1 = new Text("Hello i am very important that's why i am long!!!!");
@@ -64,16 +66,23 @@ public class PagePreview extends StackPane implements UpdatableGUI {
 		// TODO Auto-generated method stub
 		Page page = book.getPages().get(currentPage);
 		textFlow.getChildren().clear();
+		LinkedList<TextElement> elements = page.getTextElements();
 		
-		for (TextElement t : page.getTextElements()) {
-			addText(t);
+		
+		for (int i = 0; i < noElements; i++) {
+			TextElement t = elements.get(i);
+			addText(t,i==currentElemnt);
 		}
 	}
 	
 	/**
 	 * add a TextElement to the page preview.
 	 */
-	private void addText(TextElement element) {
+	private void addText(TextElement element,boolean selected) {
+		
+		if(element.toString() == null) {//don't try to draw empty elements.
+			return;
+		}
 		Text text = new Text(element.toString());
 
 		text.setFill(element.getColour());
@@ -92,11 +101,10 @@ public class PagePreview extends StackPane implements UpdatableGUI {
 
 		text.setFont(Font.font(fontFamily, weight, posture, fontSize));
 
-		// TODO: figure out what a good way to detect if a current node is selected is.
-		if (false) {
-			text.setStrokeWidth(fontSize / 3);
-			text.setStrokeType(StrokeType.OUTSIDE);
-			text.setStroke(Color.YELLOW);
+		if (selected) {
+			text.setStrokeWidth(fontSize/3);
+			//text.setStrokeType(StrokeType.OUTSIDE); //looks better but is really slow
+			text.setStroke(Color.color(1.0, 1.0, 0.0, 0.25));//yellow with 25% opacity so you can see the text behind the highlight.
 		}
 
 		textFlow.getChildren().add(text);
