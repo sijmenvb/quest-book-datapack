@@ -3,19 +3,9 @@ package gui;
 import java.util.Collections;
 
 import converter.Book;
-import converter.Page;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.geometry.Pos;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
-import javafx.scene.text.Font;
-import textElement.PlainTextElement;
-
 /**
  * this class houses all the aspects of the GUI
  * 
